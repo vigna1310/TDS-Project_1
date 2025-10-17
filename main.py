@@ -10,6 +10,9 @@ GITHUB_TOKEN   = os.getenv("GITHUB_TOKEN")
 AIPIPE_KEY     = os.getenv("AIPIPE_KEY")
 SECRET_KEY     = os.getenv("secret") or "yoobro"
 GITHUB_USERNAME = "vigna1310"     # <--- change if needed
+print("🔑 GITHUB_TOKEN loaded:", bool(GITHUB_TOKEN))
+print("🤖 AIPIPE key loaded:", bool(AIPIPE_KEY))
+
 
 app = FastAPI()
 
@@ -110,7 +113,7 @@ def write_code_with_llm(brief: str):
     cleaned_html = cleaned_html.strip()
     print("✅ Generated HTML code with LLM.")
     return [{"name": "index.html", "content": cleaned_html},
-            {"name": "README.md", "content": f"# Generated App\n\nTask: {brief}\n\nGenerated ."},
+            {"name": "README.md", "content": f"# Generated App\n\nTask: {brief}\n\nGenerated via LLM."},
             {"name": "LICENSE", "content": "MIT License"},
             {"name": ".nojekyll", "content": ""}
         ]
@@ -236,7 +239,7 @@ def handle_task(data: dict):
         resp = requests.post(evaluation_url, headers=headers, json=payload)
         print("✅ Evaluation server replied:", resp.status_code)
 
-        return {"status": "ok", "round": round_number, "repo": repo}
+        return payload
 
     except Exception as e:
         print("❌ Error:", e)
